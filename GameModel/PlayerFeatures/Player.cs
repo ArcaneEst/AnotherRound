@@ -36,5 +36,20 @@ namespace AnotherRound
             Location.X += move.X;
             Location.Y += move.Y;
         }
+
+        public Vector ReactOnCollishion(ISquare obstacle, Vector move)
+        {
+            var minX = obstacle.MinPoints.X - Size.Width / 2 - Location.X;
+            var maxX = obstacle.MaxPoints.X + Size.Width / 2 - Location.X;
+            var deltaX = Math.Abs(minX) < Math.Abs(maxX) ? minX : maxX;
+
+            var minY = obstacle.MinPoints.Y - Location.Y - Size.Height / 2;
+            var maxY = obstacle.MaxPoints.Y - Location.Y + Size.Height / 2;
+            var deltaY =Math.Abs(minY) < Math.Abs(maxY) ? minY : maxY;
+
+            if (Math.Abs(deltaX) > 5) deltaX = move.X;
+            if (Math.Abs(deltaY) > 5) deltaY = move.Y;
+            return new Vector(deltaX, deltaY);
+        }
     }
 }

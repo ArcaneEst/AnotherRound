@@ -99,3 +99,4 @@ C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.VisualStud
 C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
 C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
 C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\FluentAssertions.dll

@@ -5,12 +5,14 @@ using System.Text;
 
 namespace AnotherRound
 {
-    public class Projectail : ICollishiable, IAbleToMove, IPlayerFriendly
+    public class Projectail : ICollishiable, IAbleToMove, IPlayerFriendly, ICircle
     {
         public int Speed { get; set; }
         public Size Size { get; set; }
         public double DirectionAngle { get; set; }
         public Vector Location { get; set; }
+
+        public double Radius => Size.Width / 2;
 
         public Projectail(int speed, Size size)
         {

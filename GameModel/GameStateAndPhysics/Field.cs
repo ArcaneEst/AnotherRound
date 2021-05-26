@@ -23,8 +23,16 @@ namespace AnotherRound
         public Player Player { get; set; } = new Player(new Vector(100, 100));
         public List<Projectail> Projectails { get; set; } = new List<Projectail>();
         public List<SquareObstacle> Obstacles { get; set; } = new List<SquareObstacle>() 
-        { new SquareObstacle(new Vector(101, 50), new Size(50, 50)) };
+        { new SquareObstacle(new Vector(500, 500), new Size(50, 50)),
+        new SquareObstacle(new Vector(200, 200), new Size(50, 50))};
 
+        /// <summary>
+        /// Проверка - находится ли объект после перемещения за полем хотя бы частично.
+        /// </summary>
+        /// <param name="location">Старая локация</param>
+        /// <param name="objectSize">Размер объекта</param>
+        /// <param name="move">Ветор движения объекта</param>
+        /// <returns></returns>
         private bool IsOutOfField(Vector location, Size objectSize, Vector move)
         {
             var newX = location.X + move.X;
@@ -36,6 +44,12 @@ namespace AnotherRound
                 newY < objectSize.Height / 2;
         }
 
+        /// <summary>
+        /// Проверка - находится ли объект за полем хотя бы частично.
+        /// </summary>
+        /// <param name="newLocation"></param>
+        /// <param name="objectSize"></param>
+        /// <returns></returns>
         private bool IsOutOfField(Vector newLocation, Size objectSize)
         {
             return newLocation.X > FieldSize.Width - objectSize.Width / 2 ||
@@ -46,6 +60,9 @@ namespace AnotherRound
 
         //Стрельба
         #region
+        /// <summary>
+        /// Выполняет действие всех объектов-пуль на поле.
+        /// </summary>
         public void ExecuteAllProjectiles()
         {
             foreach (var proj in Projectails)
@@ -54,13 +71,35 @@ namespace AnotherRound
             RemoveHitedProjectiles();
         }
 
+        /// <summary>
+        /// Убирает из списка пуль все те, что находятся за полем или куда-то попали.
+        /// </summary>
         private void RemoveHitedProjectiles()
         {
             Projectails = Projectails
                 .Where(proj => !IsOutOfField(proj.Location, proj.Size))
+                .Where(proj => !IsCollisionWithObstacle(proj))
                 .ToList();
         }
 
+        /// <summary>
+        /// Проверяет, столкнулась ли пуля хотя бы с одним препятствием.
+        /// </summary>
+        /// <param name="proj">Проверяемая пуля</param>
+        /// <returns></returns>
+        private bool IsCollisionWithObstacle(Projectail proj)
+        {
+            foreach (var obstacle in Obstacles)
+                if (Physics.CollisionTwoForms(proj, obstacle, Vector.Zero))
+                    return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Расчитывает новое положение пули и выполняет ее действие.
+        /// </summary>
+        /// <param name="projectile">Выполняемая пуля</param>
         private void ExecuteProjectile(Projectail projectile)
         {
             var newProjectileLocation = projectile.CalculateNewLocation();
@@ -69,7 +108,12 @@ namespace AnotherRound
         }
 
 
-
+        /// <summary>
+        /// Просит объект игрока попробовать сгенерировать новую пулю. Если объект игрока не может выстрелить,
+        /// null, пуля не появляется.
+        /// </summary>
+        /// <param name="controlX">Обработанный ввод от игрока по оси x</param>
+        /// <param name="controlY">Обработанный ввод от игрока по оси y</param>
         internal void TryShoot(Direction controlX, Direction controlY)
         {
             var newProjectile = Player.TryGenerateProjectile(controlX, controlY);
@@ -83,6 +127,30 @@ namespace AnotherRound
 
         //Движение персонажа игрока.
         #region
+        /// <summary>
+        /// Пробует передвинуть объект игрока по вводу игрока.
+        /// </summary>
+        /// <param name="controlX">Обработанный ввод по оси х</param>
+        /// <param name="controlY">Обработанный ввод по оси y</param>
+        internal void MovePlayer(Direction controlX, Direction controlY)
+        {
+            var move = MoveInDirectionUsingVector(controlX, controlY);
+
+            foreach (var obstacle in Obstacles)
+            {
+                if (Physics.CollisionTwoForms(Player, obstacle, move))
+                    move = Player.ReactOnCollishion(obstacle, move);
+            }
+
+            ApplyMoveWithCheckFieldSize(move);
+        }
+
+        /// <summary>
+        /// Возвращает вектор движения игрока по обработанному вводу.
+        /// </summary>
+        /// <param name="controlX">Обработанный ввод по оси x</param>
+        /// <param name="controlY">Обработанный ввод по оси y</param>
+        /// <returns></returns>
         private Vector MoveInDirectionUsingVector(Direction controlX, Direction controlY)
         {
             var xMove = controlX < 0 ? -1 : controlX > 0 ? 1 : 0;
@@ -91,13 +159,10 @@ namespace AnotherRound
             return new Vector(Speed * xMove, Speed * yMove);
         }
 
-        internal void MovePlayer(Direction controlX, Direction controlY)
-        {
-            var move = MoveInDirectionUsingVector(controlX, controlY);
-            
-            ApplyMoveWithCheckFieldSize(move);
-        }
-
+        /// <summary>
+        /// Проверяет, находится ли объект игрока за полем, после чего применяет движение, если возможно.
+        /// </summary>
+        /// <param name="move">Вектор движения объекта игрока.</param>
         private void ApplyMoveWithCheckFieldSize(Vector move)
         {
             var newX = Player.Location.X + move.X;
