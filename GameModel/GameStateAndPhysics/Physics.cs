@@ -14,14 +14,12 @@ namespace AnotherRound
         /// </summary>
         /// <param name="initiator">Объект, который двигается</param>
         /// <param name="obstacle">Объект, с которым сталкиваются.</param>
-        /// <param name="move">Вектор движения инициатора.</param>
         /// <returns></returns>
-        public static bool CollisionTwoForms(ICircle initiator, ICircle obstacle, Vector move)
+        public static bool CollisionTwoForms(ICircle initiator, ICircle obstacle)
         {
-            var newPosition = initiator.Location + move;
             var space = initiator.Size.Width / 2 + obstacle.Size.Width / 2;
 
-            return newPosition.ModOfDistanceTo(obstacle.Location) <= space; // -5, чтобы не цепляться за углы
+            return initiator.Location.ModOfDistanceTo(obstacle.Location) <= space;
         }
 
         /// <summary>
@@ -29,53 +27,29 @@ namespace AnotherRound
         /// </summary>
         /// <param name="initiator">Объект, который двигается.</param>
         /// <param name="obstacle">Объект, с которым сталкиваются.</param>
-        /// <param name="move">Вектор движения инициатора.</param>
         /// <returns></returns>
-        public static bool CollisionTwoForms(ISquare initiator, ISquare obstacle, Vector move)
+        public static bool CollisionTwoForms(ISquare initiator, ISquare obstacle)
         {
-            var newPositionMin = initiator.MinPoints + move;
-            var newPositionMax = initiator.MaxPoints + move;
-
-            if (newPositionMax.X < obstacle.MinPoints.X || 
-                newPositionMin.X > obstacle.MaxPoints.X) return false;
-            if (newPositionMax.Y < obstacle.MinPoints.Y || 
-                newPositionMin.Y > obstacle.MaxPoints.Y) return false;
+            if (initiator.MaxPoints.X < obstacle.MinPoints.X || 
+                initiator.MinPoints.X > obstacle.MaxPoints.X) return false;
+            if (initiator.MaxPoints.Y < obstacle.MinPoints.Y || 
+                initiator.MinPoints.Y > obstacle.MaxPoints.Y) return false;
 
             return true;
         }
 
         /// <summary>
-        /// Проверка столкновения квадрата и круга
-        /// </summary>
-        /// <param name="initiator">Инициатор-квадрат</param>
-        /// <param name="obstacle">Препятствие-круг</param>
-        /// <param name="move">Вектор движения инициатора</param>
-        /// <returns></returns>
-        public static bool CollisionTwoForms(ISquare initiator, ICircle obstacle, Vector move)
-        {
-            var newLocation = initiator.Location + move;
-            var newSquare = new SquareObstacle(newLocation, initiator.Size);
-            if (IsLocationBetweenBounds(newLocation, newSquare.MinPoints, newSquare.MaxPoints))
-                return CollisionTwoForms(newSquare, new SquareObstacle(obstacle.Location, obstacle.Size), Vector.Zero);
-            else
-                return CollisionTwoForms(GenerateCircleFromSquare(initiator), obstacle, move);
-        }
-
-        /// <summary>
         /// Проверка столкновения круга и квадрата
         /// </summary>
-        /// <param name="initiator">Инициатор-круг</param>
-        /// <param name="obstacle">Препятствие-квадрат</param>
-        /// <param name="move">Вектор движения инициатора</param>
+        /// <param name="circle">Круг</param>
+        /// <param name="square">Квадрат</param>
         /// <returns></returns>
-        public static bool CollisionTwoForms(ICircle initiator, ISquare obstacle, Vector move)
+        public static bool CollisionTwoForms(ICircle circle, ISquare square)
         {
-            var newLocation = initiator.Location + move;
-
-            if (IsLocationBetweenBounds(newLocation, obstacle.MinPoints, obstacle.MaxPoints))
-                return CollisionTwoForms(new SquareObstacle(newLocation, initiator.Size), obstacle, Vector.Zero);
+            if (IsLocationBetweenBounds(circle.Location, square.MinPoints, square.MaxPoints))
+                return CollisionTwoForms(new SquareObstacle(circle.Location, circle.Size), square);
             else
-                return CollisionTwoForms(initiator, GenerateCircleFromSquare(obstacle), move);
+                return CollisionTwoForms(circle, GenerateCircleFromSquare(square));
         }
 
         /// <summary>
@@ -121,8 +95,9 @@ namespace AnotherRound
             var first = new CircleObstacle(new Vector(firstX, firstY), new Size(30, 30));
             var second = new CircleObstacle(new Vector(secondX, secondY), new Size(30, 30));
             var move = new Vector(moveX, moveY);
+            first.Location += move;
 
-            var isCollision = Physics.CollisionTwoForms(first, second, move);
+            var isCollision = Physics.CollisionTwoForms(first, second);
 
             isCollision.Should().Be(predicate);
         }
@@ -145,8 +120,9 @@ namespace AnotherRound
             var first = new SquareObstacle(new Vector(firstX, firstY), new Size(30, 30));
             var second = new SquareObstacle(new Vector(secondX, secondY), new Size(30, 30));
             var move = new Vector(moveX, moveY);
+            first.Location += move;
 
-            var isCollision = Physics.CollisionTwoForms(first, second, move);
+            var isCollision = Physics.CollisionTwoForms(first, second);
 
             isCollision.Should().Be(predicate);
         }
@@ -184,8 +160,9 @@ namespace AnotherRound
             var circle = new CircleObstacle(new Vector(firstX, firstY), new Size(30, 30));
             var square = new SquareObstacle(new Vector(secondX, secondY), new Size(30, 30));
             var move = new Vector(moveX, moveY);
+            circle.Location += move;
 
-            var isCollision = Physics.CollisionTwoForms(circle, square, move);
+            var isCollision = Physics.CollisionTwoForms(circle, square);
 
             isCollision.Should().Be(collisionPredicate);
         }
@@ -199,8 +176,9 @@ namespace AnotherRound
             var square = new SquareObstacle(new Vector(firstX, firstY), new Size(30, 30));
             var circle = new CircleObstacle(new Vector(secondX, secondY), new Size(30, 30));
             var move = new Vector(moveX, moveY);
+            square.Location += move;
 
-            var isCollishion = Physics.CollisionTwoForms(square, circle, move);
+            var isCollishion = Physics.CollisionTwoForms(circle, square);
 
             isCollishion.Should().Be(collisionPredicate);
         }

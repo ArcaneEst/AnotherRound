@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AnotherRound
 {
-    class CircleObstacle : ICircle
+    public class CircleObstacle :ICircle
     {
         public Vector Location { get ; set ; }
         public Size Size { get ; set ; }

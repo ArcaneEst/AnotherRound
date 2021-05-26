@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AnotherRound
 {
-    public class SquareObstacle : ICollishiable, ISquare
+    public class SquareObstacle : ISquare
     {
         public Vector Location { get; set; }
         public Size Size { get; set; }

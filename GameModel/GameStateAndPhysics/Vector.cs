@@ -49,6 +49,11 @@ namespace AnotherRound
             return new Vector(Math.Abs(anotherVector.X - X), Math.Abs(anotherVector.Y - Y));
         }
 
+        public Vector Copy()
+        {
+            return new Vector(X, Y);
+        }
+
         public double Length { get => Math.Sqrt(X * X + Y * Y); }
     }
 }

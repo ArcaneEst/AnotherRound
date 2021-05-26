@@ -90,7 +90,7 @@ namespace AnotherRound
         private bool IsCollisionWithObstacle(Projectail proj)
         {
             foreach (var obstacle in Obstacles)
-                if (Physics.CollisionTwoForms(proj, obstacle, Vector.Zero))
+                if (Physics.CollisionTwoForms(proj, obstacle))
                     return true;
 
             return false;
@@ -135,10 +135,11 @@ namespace AnotherRound
         internal void MovePlayer(Direction controlX, Direction controlY)
         {
             var move = MoveInDirectionUsingVector(controlX, controlY);
+            var newPlayer = new CircleObstacle(Player.Location.Copy() + move, Player.Size);
 
             foreach (var obstacle in Obstacles)
             {
-                if (Physics.CollisionTwoForms(Player, obstacle, move))
+                if (Physics.CollisionTwoForms(newPlayer, obstacle))
                     move = Player.ReactOnCollishion(obstacle, move);
             }
 
