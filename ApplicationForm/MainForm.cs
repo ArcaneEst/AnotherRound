@@ -107,7 +107,18 @@ namespace AnotherRound
         private void DrawObstacles(Graphics g)
         {
             foreach (var obstacle in Field.Obstacles)
-                g.FillCenterRectangle(Brushes.Red, obstacle.Location, obstacle.Size);
+            {
+                var obstacleBrush = Brushes.Brown;
+                var removableBrush = Brushes.Red;
+                if (obstacle is CircleRemovable)
+                    g.FillCentredEllipse(removableBrush, obstacle.Location, obstacle.Size);
+                else if (obstacle is SquareRemovable)
+                    g.FillCenterRectangle(removableBrush, obstacle.Location, obstacle.Size);
+                else if (obstacle is ISquare)
+                    g.FillCenterRectangle(obstacleBrush, obstacle.Location, obstacle.Size);
+                else if (obstacle is ICircle)
+                    g.FillCentredEllipse(obstacleBrush, obstacle.Location, obstacle.Size);
+            }
         }
         #endregion
 

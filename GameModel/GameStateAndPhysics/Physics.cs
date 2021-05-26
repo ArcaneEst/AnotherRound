@@ -9,6 +9,21 @@ namespace AnotherRound
 {
     public class Physics
     {
+        public static bool CollisionTwoAbstract<T, C>(T first, C second)
+            where T : IForm
+            where C : IForm
+        {
+            if (first is ICircle firstCircle && second is ICircle secondCircle)
+                return CollisionTwoForms(firstCircle, secondCircle);
+            else if (first is ISquare firstSquare && second is ISquare secondSquare)
+                return CollisionTwoForms(firstSquare, secondSquare);
+            else if (first is ICircle circle && second is ISquare square)
+                return CollisionTwoForms(circle, square);
+            else if (first is ISquare square1 && second is ICircle circle1)
+                return CollisionTwoAbstract(circle1, square1);
+            else throw new ArgumentException();
+        }
+
         /// <summary>
         /// Проверка столкновения двух кругов.
         /// </summary>

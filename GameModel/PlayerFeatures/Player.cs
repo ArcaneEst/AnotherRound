@@ -6,7 +6,7 @@ namespace AnotherRound
     /// <summary>
     /// Класс персонажа игрока.
     /// </summary>
-    public class Player : ICollishiable, IAbleToMove, ICircle
+    public class Player : ICollishiable, ICircle
     {
         public Vector Location { get; set; }
         public Size Size { get; set; } = new Size(50, 50);
@@ -35,6 +35,20 @@ namespace AnotherRound
         {
             Location.X += move.X;
             Location.Y += move.Y;
+        }
+
+        public Vector ReactOnCollishion(Obstacle obstacle, Vector move)
+        {
+            if (obstacle is ISquare squareObstacle)
+                return ReactOnCollishion(squareObstacle, move);
+            if (obstacle is ICircle circleObstacle)
+                return ReactOnCollishion(circleObstacle, move);
+            else throw new ArgumentException();
+        }
+
+        public Vector ReactOnCollishion(ICircle obstacle, Vector move)
+        {
+            return Vector.Zero;
         }
 
         public Vector ReactOnCollishion(ISquare obstacle, Vector move)

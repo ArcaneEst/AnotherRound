@@ -22,27 +22,10 @@ namespace AnotherRound
         public Size FieldSize { get; set; } = new Size(1200, 700);
         public Player Player { get; set; } = new Player(new Vector(100, 100));
         public List<Projectail> Projectails { get; set; } = new List<Projectail>();
-        public List<SquareObstacle> Obstacles { get; set; } = new List<SquareObstacle>() 
-        { new SquareObstacle(new Vector(500, 500), new Size(50, 50)),
-        new SquareObstacle(new Vector(200, 200), new Size(50, 50))};
-
-        /// <summary>
-        /// Проверка - находится ли объект после перемещения за полем хотя бы частично.
-        /// </summary>
-        /// <param name="location">Старая локация</param>
-        /// <param name="objectSize">Размер объекта</param>
-        /// <param name="move">Ветор движения объекта</param>
-        /// <returns></returns>
-        private bool IsOutOfField(Vector location, Size objectSize, Vector move)
-        {
-            var newX = location.X + move.X;
-            var newY = location.Y + move.Y;
-
-            return newX > FieldSize.Width - objectSize.Width / 2 ||
-                newX < objectSize.Width / 2 ||
-                newY > FieldSize.Height - objectSize.Height / 2 ||
-                newY < objectSize.Height / 2;
-        }
+        public List<Obstacle> Obstacles { get; set; } = new List<Obstacle>() 
+        { new CircleObstacle(new Vector(300, 300), new Size(50, 50)),
+        new CircleRemovable(new Vector(200,200), new Size(40, 40), 3),
+        new SquareRemovable(new Vector(500, 500), new Size(100, 50), 10)};
 
         /// <summary>
         /// Проверка - находится ли объект за полем хотя бы частично.
@@ -72,6 +55,17 @@ namespace AnotherRound
         }
 
         /// <summary>
+        /// Расчитывает новое положение пули и выполняет ее действие.
+        /// </summary>
+        /// <param name="projectile">Выполняемая пуля</param>
+        private void ExecuteProjectile(Projectail projectile)
+        {
+            var newProjectileLocation = projectile.CalculateNewLocation();
+
+            projectile.Location = newProjectileLocation;
+        }
+
+        /// <summary>
         /// Убирает из списка пуль все те, что находятся за полем или куда-то попали.
         /// </summary>
         private void RemoveHitedProjectiles()
@@ -90,23 +84,24 @@ namespace AnotherRound
         private bool IsCollisionWithObstacle(Projectail proj)
         {
             foreach (var obstacle in Obstacles)
-                if (Physics.CollisionTwoForms(proj, obstacle))
+                if (Physics.CollisionTwoAbstract(proj, obstacle))
+                {
+                    DoDamageIfEnemy(obstacle);
                     return true;
+                }
 
             return false;
         }
 
-        /// <summary>
-        /// Расчитывает новое положение пули и выполняет ее действие.
-        /// </summary>
-        /// <param name="projectile">Выполняемая пуля</param>
-        private void ExecuteProjectile(Projectail projectile)
+        private void DoDamageIfEnemy(Obstacle obstacle)
         {
-            var newProjectileLocation = projectile.CalculateNewLocation();
-
-            projectile.Location = newProjectileLocation;
+            if (obstacle is IEnemy removable)
+            {
+                removable.GetHit();
+                if (removable.IsDead)
+                    Obstacles.Remove(obstacle);
+            }
         }
-
 
         /// <summary>
         /// Просит объект игрока попробовать сгенерировать новую пулю. Если объект игрока не может выстрелить,
@@ -139,7 +134,7 @@ namespace AnotherRound
 
             foreach (var obstacle in Obstacles)
             {
-                if (Physics.CollisionTwoForms(newPlayer, obstacle))
+                if (Physics.CollisionTwoAbstract(newPlayer, obstacle))
                     move = Player.ReactOnCollishion(obstacle, move);
             }
 
