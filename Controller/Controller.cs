@@ -10,17 +10,14 @@ namespace AnotherRound
         public ControlFlags ShootFlags { get; set; } = new ControlFlags();
         public ControlFlags MoveFlags { get; set; } = new ControlFlags();
 
-        public void HandleKey(Keys e, bool down)
+        public void ExecuteContrloller(Field field)
         {
-            if (e == Keys.W) MoveFlags.Up = down;
-            if (e == Keys.S) MoveFlags.Down = down;
-            if (e == Keys.A) MoveFlags.Left = down;
-            if (e == Keys.D) MoveFlags.Right = down;
+            if (field.Player.IsDead)
+                return;
 
-            if (e == Keys.Up) ShootFlags.Up = down;
-            if (e == Keys.Down) ShootFlags.Down = down;
-            if (e == Keys.Left) ShootFlags.Left = down;
-            if (e == Keys.Right) ShootFlags.Right = down;
+            field.ExecuteAllProjectiles();
+            ExecuteMove(field);
+            ExecuteShoot(field);
         }
 
         public void ExecuteMove(Field field)
@@ -51,6 +48,19 @@ namespace AnotherRound
                 return Direction.None;
             else
                 return controlFlags.Right ? Direction.Right : Direction.Left;
+        }
+
+        public void HandleKey(Keys e, bool down)
+        {
+            if (e == Keys.W) MoveFlags.Up = down;
+            if (e == Keys.S) MoveFlags.Down = down;
+            if (e == Keys.A) MoveFlags.Left = down;
+            if (e == Keys.D) MoveFlags.Right = down;
+
+            if (e == Keys.Up) ShootFlags.Up = down;
+            if (e == Keys.Down) ShootFlags.Down = down;
+            if (e == Keys.Left) ShootFlags.Left = down;
+            if (e == Keys.Right) ShootFlags.Right = down;
         }
     }
 }

@@ -15,6 +15,14 @@ namespace AnotherRound
         public Controller Controller = new Controller();
         public Image Image;
 
+        public void RestartGame()
+        {
+            timer = new Timer();
+            Field = new Field(new Vector(50, 50));
+            Controller = new Controller();
+        }
+
+
         //Работа с формой
         #region
         /// <summary>
@@ -49,7 +57,6 @@ namespace AnotherRound
         /// <param name="args"></param>
         public void TimerTick(object sender, EventArgs args)
         {
-            Field.ExecuteAllProjectiles();
             ExecuteContrloller();
             Invalidate();
         }
@@ -129,8 +136,7 @@ namespace AnotherRound
         /// </summary>
         private void ExecuteContrloller()
         {
-            Controller.ExecuteMove(Field);
-            Controller.ExecuteShoot(Field);
+            Controller.ExecuteContrloller(Field);
         }
 
         /// <summary>

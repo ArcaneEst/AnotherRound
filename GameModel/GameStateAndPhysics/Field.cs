@@ -17,14 +17,13 @@ namespace AnotherRound
 
         public Field()
         { }
-
         public int Speed { get; set; } = 5;
         public Size FieldSize { get; set; } = new Size(1200, 700);
         public Player Player { get; set; } = new Player(new Vector(100, 100));
         public List<Projectail> Projectails { get; set; } = new List<Projectail>();
         public List<Obstacle> Obstacles { get; set; } = new List<Obstacle>() 
         { new CircleObstacle(new Vector(300, 300), new Size(50, 50)),
-        new CircleRemovable(new Vector(200,200), new Size(40, 40), 3),
+        new RemovableDamaging(new Vector(200,200), new Size(40, 40), 3),
         new SquareRemovable(new Vector(500, 500), new Size(100, 50), 10)};
 
         /// <summary>

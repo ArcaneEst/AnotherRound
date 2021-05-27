@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AnotherRound
 {
-    public class Projectail : ICollishiable, ICircle
+    public class Projectail : ICircle
     {
         public int Speed { get; set; }
         public Size Size { get; set; }

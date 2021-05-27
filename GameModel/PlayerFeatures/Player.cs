@@ -6,14 +6,15 @@ namespace AnotherRound
     /// <summary>
     /// Класс персонажа игрока.
     /// </summary>
-    public class Player : ICollishiable, ICircle
+    public class Player : ICircle
     {
+        public event GameOver();
         public Vector Location { get; set; }
         public Size Size { get; set; } = new Size(50, 50);
-
         public double Radius => Size.Width / 2;
-
         public Weapon weapon = new Weapon(10, new Size(15, 15));
+        public int HealthPoints { get; set; } = 4;
+        public bool IsDead => HealthPoints <= 0;
 
         public Player(Vector spawnPoint)
         {
@@ -39,9 +40,12 @@ namespace AnotherRound
 
         public Vector ReactOnCollishion(Obstacle obstacle, Vector move)
         {
+            if (obstacle is ICanDamage damaging)
+                damaging.DealPlayerDamage(this);
+
             if (obstacle is ISquare squareObstacle)
                 return ReactOnCollishion(squareObstacle, move);
-            if (obstacle is ICircle circleObstacle)
+            else if (obstacle is ICircle circleObstacle)
                 return ReactOnCollishion(circleObstacle, move);
             else throw new ArgumentException();
         }
@@ -64,6 +68,11 @@ namespace AnotherRound
             if (Math.Abs(deltaX) > 5) deltaX = move.X;
             if (Math.Abs(deltaY) > 5) deltaY = move.Y;
             return new Vector(deltaX, deltaY);
+        }
+
+        public void DealDamage(int damage)
+        {
+            HealthPoints -= damage;
         }
     }
 }
