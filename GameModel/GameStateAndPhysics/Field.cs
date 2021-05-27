@@ -5,11 +5,10 @@ using System.Linq;
 
 namespace AnotherRound
 {
-    /// <summary>
-    /// Поле боя.
-    /// </summary>
     public class Field
     {
+        public delegate void GameEnded();
+        public event GameEnded EndGameEvent;
         public Field(Vector playerStartPosition)
         {
             Player = new Player(playerStartPosition);
@@ -134,7 +133,11 @@ namespace AnotherRound
             foreach (var obstacle in Obstacles)
             {
                 if (Physics.CollisionTwoAbstract(newPlayer, obstacle))
+                {
                     move = Player.ReactOnCollishion(obstacle, move);
+                    if (Player.IsDead)
+                        EndGameEvent.Invoke();
+                }
             }
 
             ApplyMoveWithCheckFieldSize(move);

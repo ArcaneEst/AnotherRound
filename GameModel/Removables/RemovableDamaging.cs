@@ -15,9 +15,9 @@ namespace AnotherRound
             HealthPoints = healthPoints;
         }
 
-        public void DealPlayerDamage(Player player)
+        public int CalculateDamage(Player player)
         {
-            player.DealDamage(1);
+            return 1;
         }
     }
 }

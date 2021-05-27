@@ -15,11 +15,28 @@ namespace AnotherRound
         public Controller Controller = new Controller();
         public Image Image;
 
+        public void TryRestartGame()
+        {
+            var dialogResult = MessageBox.Show("Restart game?", "Conformation", MessageBoxButtons.OKCancel);
+            if (dialogResult == DialogResult.OK)
+            {
+                RestartGame();
+            }
+            else
+                Close();
+        }
+
         public void RestartGame()
         {
             timer = new Timer();
             Field = new Field(new Vector(50, 50));
             Controller = new Controller();
+            StartGame();
+        }
+
+        public void StartGame()
+        {
+            Field.EndGameEvent += TryRestartGame;
         }
 
 
@@ -35,6 +52,7 @@ namespace AnotherRound
             DoubleBuffered = true;
             Text = "Another Round?";
             WindowState = FormWindowState.Maximized;
+            StartGame();
         }
 
         /// <summary>
@@ -105,7 +123,10 @@ namespace AnotherRound
         /// <param name="g">Заполняемый объект графики.</param>
         private void DrawPlayer(Graphics g)
         {
-            g.FillCentredEllipse(Brushes.Blue, Field.Player.Location, Field.Player.Size);
+            if (Field.Player.IsCanBeHited)
+                g.FillCentredEllipse(Brushes.Blue, Field.Player.Location, Field.Player.Size);
+            else
+                g.FillCentredEllipse(Brushes.Yellow, Field.Player.Location, Field.Player.Size);
         }
         /// <summary>
         /// Рисует препятствия.
@@ -159,6 +180,11 @@ namespace AnotherRound
             Controller.HandleKey(e.KeyCode, false);
         }
         #endregion
+    }
+
+    class DialogBox : Form
+    {
+
     }
 
     //Методы расширения

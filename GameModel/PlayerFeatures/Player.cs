@@ -8,13 +8,14 @@ namespace AnotherRound
     /// </summary>
     public class Player : ICircle
     {
-        public event GameOver();
+        
         public Vector Location { get; set; }
         public Size Size { get; set; } = new Size(50, 50);
         public double Radius => Size.Width / 2;
         public Weapon weapon = new Weapon(10, new Size(15, 15));
         public int HealthPoints { get; set; } = 4;
         public bool IsDead => HealthPoints <= 0;
+        public bool IsCanBeHited { get; set; } = true;
 
         public Player(Vector spawnPoint)
         {
@@ -40,8 +41,8 @@ namespace AnotherRound
 
         public Vector ReactOnCollishion(Obstacle obstacle, Vector move)
         {
-            if (obstacle is ICanDamage damaging)
-                damaging.DealPlayerDamage(this);
+            if (obstacle is ICanDamage damageDiller)
+                TryHit(damageDiller);
 
             if (obstacle is ISquare squareObstacle)
                 return ReactOnCollishion(squareObstacle, move);
@@ -73,6 +74,26 @@ namespace AnotherRound
         public void DealDamage(int damage)
         {
             HealthPoints -= damage;
+        }
+
+        public void TryHit(ICanDamage damageDiller)
+        {
+            if (IsCanBeHited)
+            {
+                var damage = damageDiller.CalculateDamage(this);
+                DealDamage(damage);
+                Immortality(1000);
+            }
+        }
+
+        public void Immortality(int time)
+        {
+            IsCanBeHited = false;
+
+            var timer = new System.Timers.Timer(time);
+            timer.Elapsed += (sender, args) => { IsCanBeHited = true; };
+            timer.AutoReset = false;
+            timer.Start();
         }
     }
 }

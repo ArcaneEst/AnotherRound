@@ -6,6 +6,6 @@ namespace AnotherRound
 {
     public interface ICanDamage
     {
-        public void DealPlayerDamage(Player player);
+        public int CalculateDamage(Player player);
     }
 }
