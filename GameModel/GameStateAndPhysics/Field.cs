@@ -14,15 +14,20 @@ namespace AnotherRound
             Player = new Player(playerStartPosition);
         }
 
-        public Field()
-        { }
-        public Size FieldSize { get; set; } = new Size(1200, 700);
-        public Player Player { get; set; } = new Player(new Vector(100, 100));
-        public ProjectileList Projectails { get; set; } = new ProjectileList();
-        public List<Obstacle> Obstacles { get; set; } = new List<Obstacle>() 
-        { new CircleObstacle(new Vector(500, 540), new Size(50, 50)),
-        new RemovableDamaging(new Vector(200,200), new Size(40, 40), 3),
-        new SquareRemovable(new Vector(500, 500), new Size(100, 50), 10)};
+        public Size FieldSize { get; private set; } = new Size(1200, 700);
+        public Player Player { get; private set; } = new Player(new Vector(100, 100));
+        public ProjectileList Projectails { get; private set; } = new ProjectileList();
+        public ObstacleVault ObstacleVault { get; private set; } = new ObstacleVault();
+
+        public void GameTick(ControlCommand moveCommand, ControlCommand shootCommand)
+        {
+            ExecuteAllProjectiles();
+            TryShoot(shootCommand);
+            MovePlayer(moveCommand);
+
+            if (Player.IsDead)
+                EndGameEvent.Invoke();
+        }
 
         /// <summary>
         /// Проверка - находится ли объект за полем хотя бы частично.
@@ -38,19 +43,21 @@ namespace AnotherRound
                 newLocation.Y < objectSize.Height / 2;
         }
 
+        //Методы вызова компонентов игры.
+        #region
         //Стрельба
         #region
         /// <summary>
         /// Выполняет действие всех объектов-пуль на поле.
         /// </summary>
-        public void ExecuteAllProjectiles()
+        private void ExecuteAllProjectiles()
         {
-            Projectails.ExecuteAllProjectiles(FieldSize, Obstacles);
+            Projectails.ExecuteAllProjectiles(FieldSize, ObstacleVault);
         }
 
-        public void TryShoot(Direction controlX, Direction controlY)
+        private void TryShoot(ControlCommand shootCommand)
         {
-            Projectails.TryShoot(controlX, controlY, Player);
+            Projectails.TryShoot(shootCommand.X, shootCommand.Y, Player);
         }
         #endregion
 
@@ -61,13 +68,11 @@ namespace AnotherRound
         /// </summary>
         /// <param name="controlX">Обработанный ввод по оси х</param>
         /// <param name="controlY">Обработанный ввод по оси y</param>
-        internal void MovePlayer(Direction controlX, Direction controlY)
+        private void MovePlayer(ControlCommand moveCommand)
         {
-            Player.DoMoveWithActivatingCollisions(controlX, controlY, Obstacles, FieldSize);
-
-            if (Player.IsDead)
-                EndGameEvent.Invoke();
+            Player.DoMoveWithActivatingCollisions(moveCommand.X, moveCommand.Y, ObstacleVault, FieldSize);
         }
+        #endregion
         #endregion
     }
 }

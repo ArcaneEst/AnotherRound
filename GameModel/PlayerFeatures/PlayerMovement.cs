@@ -12,20 +12,20 @@ namespace AnotherRound
         /// </summary>
         /// <param name="controlX">Нажатая кнопка по x</param>
         /// <param name="controlY">Нажатая кнопка по y</param>
-        /// <param name="Obstacles">Список препятствий</param>
+        /// <param name="obstacleVault">Список препятствий</param>
         /// <param name="player">Объект игрока</param>
         /// <param name="fieldSize">Размер поля</param>
         public static Vector MovePlayer(
             Direction controlX, 
             Direction controlY, 
-            List<Obstacle> Obstacles, 
+            ObstacleVault obstacleVault, 
             Player player, 
             Size fieldSize)
         {
             var move = MoveInDirectionUsingVector(controlX, controlY, player.Speed);
             var newPlayer = new CircleObstacle(player.Location.Copy() + move, player.Size);
 
-            foreach (var obstacle in Obstacles)
+            foreach (var obstacle in obstacleVault.Obstacles)
             {
                 if (Physics.CollisionTwoAbstract(newPlayer, obstacle))
                     move = player.ReactOnCollishion(obstacle, move);

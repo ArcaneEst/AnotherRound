@@ -36,7 +36,7 @@ namespace AnotherRound
         }
 
         public void DoMoveWithActivatingCollisions(
-            Direction controlX, Direction controlY, List<Obstacle> obstacles, Size fieldSize)
+            Direction controlX, Direction controlY, ObstacleVault obstacles, Size fieldSize)
         {
             var toMove = PlayerMovement.MovePlayer(controlX, controlY, obstacles, this, fieldSize);
             ApplyMove(toMove);

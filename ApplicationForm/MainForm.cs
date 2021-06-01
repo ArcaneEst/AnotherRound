@@ -134,7 +134,7 @@ namespace AnotherRound
         /// <param name="g">Заполняемый объект графики.</param>
         private void DrawObstacles(Graphics g)
         {
-            foreach (var obstacle in Field.Obstacles)
+            foreach (var obstacle in Field.ObstacleVault.Obstacles)
             {
                 var obstacleBrush = Brushes.Brown;
                 var removableBrush = Brushes.Red;

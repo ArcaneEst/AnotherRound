@@ -15,23 +15,18 @@ namespace AnotherRound
             if (field.Player.IsDead)
                 return;
 
-            field.ExecuteAllProjectiles();
-            ExecuteMove(field);
-            ExecuteShoot(field);
+            var moveCommand = CalculateCommand(MoveFlags);
+            var shootCommand = CalculateCommand(ShootFlags);
+
+            field.GameTick(moveCommand, shootCommand);
         }
 
-        public void ExecuteMove(Field field)
+        public ControlCommand CalculateCommand(ControlFlags flags)
         {
-            var controlX = CalculateControlX(MoveFlags);
-            var controlY = CalculateControlY(MoveFlags);
-            field.MovePlayer(controlX, controlY);
-        }
+            var controlX = CalculateControlX(flags);
+            var controlY = CalculateControlY(flags);
 
-        public void ExecuteShoot(Field field)
-        {
-            var controlX = CalculateControlX(ShootFlags);
-            var controlY = CalculateControlY(ShootFlags);
-            field.TryShoot(controlX, controlY);
+            return new ControlCommand(controlX, controlY);
         }
 
         public Direction CalculateControlY(ControlFlags controlFlags)
