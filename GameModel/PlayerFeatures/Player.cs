@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace AnotherRound
@@ -16,6 +17,7 @@ namespace AnotherRound
         public int HealthPoints { get; set; } = 3;
         public bool IsDead => HealthPoints <= 0;
         public bool IsCanBeHited { get; set; } = true;
+        public int Speed { get; set; } = 5;
 
         public Player(Vector spawnPoint)
         {
@@ -31,6 +33,13 @@ namespace AnotherRound
 
             projectile.Location = new Vector(Location.X, Location.Y);
             return projectile;
+        }
+
+        public void DoMoveWithActivatingCollisions(
+            Direction controlX, Direction controlY, List<Obstacle> obstacles, Size fieldSize)
+        {
+            var toMove = PlayerMovement.MovePlayer(controlX, controlY, obstacles, this, fieldSize);
+            ApplyMove(toMove);
         }
 
         public void ApplyMove(Vector move)

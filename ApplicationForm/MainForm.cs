@@ -114,7 +114,7 @@ namespace AnotherRound
         /// <param name="g">Заполняемый объект графики.</param>
         private void DrawProjectiles(Graphics g)
         {
-            foreach (var proj in Field.Projectails)
+            foreach (var proj in Field.Projectails.Projectails)
                 g.FillCentredEllipse(Brushes.Green, proj.Location, proj.Size);
         }
         /// <summary>
@@ -180,11 +180,6 @@ namespace AnotherRound
             Controller.HandleKey(e.KeyCode, false);
         }
         #endregion
-    }
-
-    class DialogBox : Form
-    {
-
     }
 
     //Методы расширения
