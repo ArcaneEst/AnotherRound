@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AnotherRound
 {
-    public interface IEnemy
+    public interface ICanBeDamaged
     {
         int HealthPoints { get; set; }
         bool IsDead { get; }

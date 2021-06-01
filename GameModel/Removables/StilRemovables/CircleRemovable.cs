@@ -5,19 +5,18 @@ using System.Text;
 
 namespace AnotherRound
 {
-    public class SquareRemovable : SquareObstacle, IEnemy
+    class CircleRemovable : CircleObstacle, ICanBeDamaged
     {
-        public new Vector Location { get; set; }
+        public new Vector Location {get;set;}
         public new Size Size { get; set; }
         public int HealthPoints { get; set; }
         public bool IsDead => HealthPoints <= 0;
-        public SquareRemovable(Vector location, Size size, int healthPoints) : base(location, size)
+        public CircleRemovable(Vector location, Size size, int healthPoints) : base(location, size)
         {
             Location = location;
             Size = size;
             HealthPoints = healthPoints;
         }
-
         public void GetHit()
         {
             HealthPoints--;

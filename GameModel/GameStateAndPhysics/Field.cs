@@ -84,16 +84,16 @@ namespace AnotherRound
             foreach (var obstacle in Obstacles)
                 if (Physics.CollisionTwoAbstract(proj, obstacle))
                 {
-                    DoDamageIfEnemy(obstacle);
+                    DoDamageIfCanBeDamaged(obstacle);
                     return true;
                 }
 
             return false;
         }
 
-        private void DoDamageIfEnemy(Obstacle obstacle)
+        private void DoDamageIfCanBeDamaged(Obstacle obstacle)
         {
-            if (obstacle is IEnemy removable)
+            if (obstacle is ICanBeDamaged removable)
             {
                 removable.GetHit();
                 if (removable.IsDead)

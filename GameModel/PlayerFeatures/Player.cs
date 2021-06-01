@@ -13,7 +13,7 @@ namespace AnotherRound
         public Size Size { get; set; } = new Size(50, 50);
         public double Radius => Size.Width / 2;
         public Weapon weapon = new Weapon(10, new Size(15, 15));
-        public int HealthPoints { get; set; } = 4;
+        public int HealthPoints { get; set; } = 3;
         public bool IsDead => HealthPoints <= 0;
         public bool IsCanBeHited { get; set; } = true;
 
