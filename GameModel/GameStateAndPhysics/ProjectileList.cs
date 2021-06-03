@@ -56,7 +56,7 @@ namespace AnotherRound
         private bool IsCollisionWithObstacle(Projectail proj, IEnumerable<Obstacle> Obstacles)
         {
             foreach (var obstacle in Obstacles)
-                if (Physics.CollisionTwoAbstract(proj, obstacle))
+                if (Physics.IsTwoAbstracktsCollision(proj, obstacle))
                 {
                     DoDamageIfCanBeDamaged(obstacle, Obstacles);
                     return true;

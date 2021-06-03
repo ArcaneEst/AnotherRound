@@ -11,18 +11,18 @@ namespace AnotherRound
         public event GameEnded EndGameEvent;
         public Field(Vector playerStartPosition)
         {
-            ObstacleVault.Player = new Player(playerStartPosition);
+            MapObjectsVault.Player = new Player(playerStartPosition, new Size(50, 50));
         }
 
         public Size FieldSize { get; private set; } = new Size(1200, 700);
-        public Player Player { get => ObstacleVault.Player; } 
+        public Player Player { get => MapObjectsVault.Player; } 
         public ProjectileList Projectails { get; private set; } = new ProjectileList();
-        public MapObjectsVault ObstacleVault { get; private set; } = MapObjectsVault.GenerateTestLevel();
+        public MapObjectsVault MapObjectsVault { get; private set; } = MapObjectsVault.GenerateTestLevel();
 
         public void GameTick(ControlCommand moveCommand, ControlCommand shootCommand)
         {
             ExecuteAllProjectiles();
-            ObstacleVault.ExecuteMoving();
+            MapObjectsVault.ExecuteMoving(FieldSize);
             TryShoot(shootCommand);
             MovePlayer(moveCommand);
 
@@ -53,7 +53,7 @@ namespace AnotherRound
         /// </summary>
         private void ExecuteAllProjectiles()
         {
-            Projectails.ExecuteAllProjectiles(FieldSize, ObstacleVault);
+            Projectails.ExecuteAllProjectiles(FieldSize, MapObjectsVault);
         }
 
         private void TryShoot(ControlCommand shootCommand)
@@ -71,7 +71,7 @@ namespace AnotherRound
         /// <param name="controlY">Обработанный ввод по оси y</param>
         private void MovePlayer(ControlCommand moveCommand)
         {
-            Player.DoMoveWithActivatingCollisions(moveCommand.X, moveCommand.Y, ObstacleVault, FieldSize);
+            Player.DoPlayerMove(moveCommand.X, moveCommand.Y, MapObjectsVault, FieldSize);
         }
         #endregion
         #endregion

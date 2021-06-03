@@ -7,18 +7,19 @@ namespace AnotherRound
 {
     public class Movement
     {
-        public static Vector CalculateMoveVector(ICanMove movable, MapObjectsVault vault, Size fieldSize)
+        public static Vector CalculateMoveWithCollision(
+            ICanMove movable, MapObjectsVault vault, Size fieldSize, Vector moveVector)
         {
-            var moveVector = movable.GetMoveVector(vault);
             var withNewLocation = movable.GetCopyWithNewLocation(movable.Location + moveVector);
 
+            foreach (var obstacle in vault.GetAllObstacles())
+            {
+                if (obstacle != movable && Physics.IsTwoAbstracktsCollision(withNewLocation, obstacle))
+                    moveVector = movable.ReactOnCollision(obstacle, moveVector);
+            }
 
-            if (movable.IsCanCollision)
-                foreach (var obstacle in vault.GetAllObstacles())
-                {
-                    if (Physics.CollisionTwoAbstract(withNewLocation, obstacle))
-                        moveVector = movable.ReactOnCollision(obstacle, moveVector);
-                }
+            if (vault.Player != movable && Physics.IsTwoAbstracktsCollision(withNewLocation, vault.Player))
+                moveVector = movable.ReactOnCollision(vault.Player, moveVector);
 
             return CheckMoveWithFieldBounds(moveVector, fieldSize, movable);
         }

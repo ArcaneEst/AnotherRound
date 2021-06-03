@@ -39,12 +39,12 @@ namespace AnotherRound
 
         public ICanMove GetCopyWithNewLocation(Vector location)
         {
-            throw new NotImplementedException();
+            return new MovingDamaging(location, Size);
         }
 
         public Vector ReactOnCollision(Obstacle obstacle, Vector move)
         {
-            throw new NotImplementedException();
+            return move;
         }
     }
 }

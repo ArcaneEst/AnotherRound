@@ -7,21 +7,18 @@ namespace AnotherRound
     /// <summary>
     /// Класс персонажа игрока.
     /// </summary>
-    public class Player : ICircle
+    public class Player : CircleObstacle, ICircle, ICanMove
     {
-        public Vector Location { get; set; }
-        public Size Size { get; set; } = new Size(50, 50);
-        public double Radius => Size.Width / 2;
         public Weapon weapon = new Weapon(10, new Size(15, 15));
         public int HealthPoints { get; set; } = 3;
         public bool IsDead => HealthPoints <= 0;
         public bool IsCanBeHited { get; set; } = true;
         public int Speed { get; set; } = 5;
-        public bool IsCanCollision { get; set; } = true;
 
-        public Player(Vector spawnPoint)
+        public Player(Vector spawnPoint, Size size) : base(spawnPoint, size)
         {
             Location = spawnPoint;
+            Size = size;
         }
 
         internal Projectail TryGenerateProjectile(Direction controlX, Direction controlY)
@@ -35,10 +32,11 @@ namespace AnotherRound
             return projectile;
         }
 
-        public void DoMoveWithActivatingCollisions(
+        public void DoPlayerMove(
             Direction controlX, Direction controlY, MapObjectsVault obstacles, Size fieldSize)
         {
-            var toMove = PlayerMovement.CalculateMoveVector(controlX, controlY, obstacles, this, fieldSize);
+            var toMove = CalcMoveVectorByDirections(controlX, controlY, Speed);
+            toMove = Movement.CalculateMoveWithCollision(this, obstacles, fieldSize, toMove);
             ApplyMove(toMove);
         }
 
@@ -48,7 +46,7 @@ namespace AnotherRound
             Location.Y += move.Y;
         }
 
-        public Vector ReactOnCollishion(Obstacle obstacle, Vector move)
+        public Vector ReactOnCollision(Obstacle obstacle, Vector move)
         {
             if (obstacle is ICanDamage damageDiller)
                 TryHit(damageDiller);
@@ -62,7 +60,44 @@ namespace AnotherRound
 
         public Vector ReactOnCollishion(ICircle obstacle, Vector move)
         {
+            if (move.X == 0)
+                return CircleSlipX(obstacle, move);
+            if (move.Y == 0)
+                return CircleSlipY(obstacle, move);
+
             return Vector.Zero;
+        }
+
+        public Vector CircleSlipX(ICircle obstacle, Vector move)
+        {
+            var spaceBetweenCentres = Size.Width / 2 + obstacle.Size.Width / 2;
+
+            var newY = Location.Y + move.Y;
+            var newDeltaY = obstacle.Location.Y - newY;
+
+            var newXMod = (int)Math.Sqrt(spaceBetweenCentres * spaceBetweenCentres - newDeltaY * newDeltaY) + 1;
+            var deltaXForMin = obstacle.Location.X - newXMod - Location.X + move.X;
+            var deltaXForMax = obstacle.Location.X + newXMod - Location.X + move.X;
+
+            var toGo = Math.Abs(deltaXForMin) < Math.Abs(deltaXForMax) ? deltaXForMin : deltaXForMax;
+
+            return new Vector(toGo, move.Y);
+        }
+
+        public Vector CircleSlipY(ICircle obstacle, Vector move)
+        {
+            var spaceBetweenCentres = Size.Width / 2 + obstacle.Size.Width / 2;
+
+            var newX = Location.X + move.X;
+            var newDeltaX = obstacle.Location.X - newX;
+
+            var newXMod = (int)Math.Sqrt(spaceBetweenCentres * spaceBetweenCentres - newDeltaX * newDeltaX) + 1;
+            var deltaYForMin = obstacle.Location.Y - newXMod - Location.Y + move.Y;
+            var deltaYForMax = obstacle.Location.Y + newXMod - Location.Y + move.Y;
+
+            var toGo = Math.Abs(deltaYForMin) < Math.Abs(deltaYForMax) ? deltaYForMin : deltaYForMax;
+
+            return new Vector(move.X, toGo);
         }
 
         public Vector ReactOnCollishion(ISquare obstacle, Vector move)
@@ -103,6 +138,30 @@ namespace AnotherRound
             timer.Elapsed += (sender, args) => { IsCanBeHited = true; };
             timer.AutoReset = false;
             timer.Start();
+        }
+
+        /// <summary>
+        /// Возвращает вектор движения игрока по обработанному вводу.
+        /// </summary>
+        /// <param name="controlX">Обработанный ввод по оси x</param>
+        /// <param name="controlY">Обработанный ввод по оси y</param>
+        /// <returns></returns>
+        public static Vector CalcMoveVectorByDirections(Direction controlX, Direction controlY, int speed)
+        {
+            var xMove = controlX < 0 ? -1 : controlX > 0 ? 1 : 0;
+            var yMove = controlY < 0 ? -1 : controlY > 0 ? 1 : 0;
+
+            return new Vector(speed * xMove, speed * yMove);
+        }
+
+        public Vector GetMoveVector(MapObjectsVault MapObjects)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICanMove GetCopyWithNewLocation(Vector location)
+        {
+            return new Player(location, Size);
         }
     }
 }

@@ -18,6 +18,8 @@ namespace AnotherRound
 
         public static Vector Zero { get => new Vector(0, 0); }
 
+        public double Length { get => Math.Sqrt(X * X + Y * Y); }
+
         public static Vector operator +(Vector a, Vector b)
         {
             return new Vector(a.X + b.X, a.Y + b.Y);
@@ -59,6 +61,9 @@ namespace AnotherRound
             return Math.Atan2(anotherVector.Y - Y, anotherVector.X - X);
         }
 
-        public double Length { get => Math.Sqrt(X * X + Y * Y); }
+        public override string ToString()
+        {
+            return $"{X} {Y}";
+        }
     }
 }
