@@ -11,17 +11,18 @@ namespace AnotherRound
         public event GameEnded EndGameEvent;
         public Field(Vector playerStartPosition)
         {
-            Player = new Player(playerStartPosition);
+            ObstacleVault.Player = new Player(playerStartPosition);
         }
 
         public Size FieldSize { get; private set; } = new Size(1200, 700);
-        public Player Player { get; private set; } = new Player(new Vector(100, 100));
+        public Player Player { get => ObstacleVault.Player; } 
         public ProjectileList Projectails { get; private set; } = new ProjectileList();
-        public ObstacleVault ObstacleVault { get; private set; } = new ObstacleVault();
+        public MapObjectsVault ObstacleVault { get; private set; } = MapObjectsVault.GenerateTestLevel();
 
         public void GameTick(ControlCommand moveCommand, ControlCommand shootCommand)
         {
             ExecuteAllProjectiles();
+            ObstacleVault.ExecuteMoving();
             TryShoot(shootCommand);
             MovePlayer(moveCommand);
 

@@ -9,7 +9,6 @@ namespace AnotherRound
     /// </summary>
     public class Player : ICircle
     {
-        
         public Vector Location { get; set; }
         public Size Size { get; set; } = new Size(50, 50);
         public double Radius => Size.Width / 2;
@@ -18,6 +17,7 @@ namespace AnotherRound
         public bool IsDead => HealthPoints <= 0;
         public bool IsCanBeHited { get; set; } = true;
         public int Speed { get; set; } = 5;
+        public bool IsCanCollision { get; set; } = true;
 
         public Player(Vector spawnPoint)
         {
@@ -36,9 +36,9 @@ namespace AnotherRound
         }
 
         public void DoMoveWithActivatingCollisions(
-            Direction controlX, Direction controlY, ObstacleVault obstacles, Size fieldSize)
+            Direction controlX, Direction controlY, MapObjectsVault obstacles, Size fieldSize)
         {
-            var toMove = PlayerMovement.MovePlayer(controlX, controlY, obstacles, this, fieldSize);
+            var toMove = PlayerMovement.CalculateMoveVector(controlX, controlY, obstacles, this, fieldSize);
             ApplyMove(toMove);
         }
 

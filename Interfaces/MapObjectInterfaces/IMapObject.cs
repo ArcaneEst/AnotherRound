@@ -4,10 +4,8 @@ using System.Text;
 
 namespace AnotherRound
 {
-    public interface ICanMove
+    public interface IMapObject
     {
-        int Speed { get; set; }
-
-        public Vector GetMoveVector(); 
+        public Vector Location { get; set; }
     }
 }

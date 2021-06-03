@@ -54,6 +54,11 @@ namespace AnotherRound
             return new Vector(X, Y);
         }
 
+        public double AngleTo(Vector anotherVector)
+        {
+            return Math.Atan2(anotherVector.Y - Y, anotherVector.X - X);
+        }
+
         public double Length { get => Math.Sqrt(X * X + Y * Y); }
     }
 }

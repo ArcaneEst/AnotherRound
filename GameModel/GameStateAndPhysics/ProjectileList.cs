@@ -18,7 +18,7 @@ namespace AnotherRound
         /// <summary>
         /// Выполняет действие всех объектов-пуль на поле.
         /// </summary>
-        public void ExecuteAllProjectiles(Size FieldSize, ObstacleVault obstacleVault)
+        public void ExecuteAllProjectiles(Size FieldSize, MapObjectsVault obstacleVault)
         {
             foreach (var proj in Projectails)
                 ExecuteProjectile(proj);
@@ -40,11 +40,11 @@ namespace AnotherRound
         /// <summary>
         /// Убирает из списка пуль все те, что находятся за полем или куда-то попали.
         /// </summary>
-        private void RemoveHitedProjectiles(Size FieldSize, ObstacleVault obstacleVault)
+        private void RemoveHitedProjectiles(Size FieldSize, MapObjectsVault obstacleVault)
         {
             Projectails = Projectails
                 .Where(proj => !IsOutOfField(proj.Location, proj.Size, FieldSize))
-                .Where(proj => !IsCollisionWithObstacle(proj, obstacleVault.Obstacles))
+                .Where(proj => !IsCollisionWithObstacle(proj, obstacleVault.GetAllObstacles()))
                 .ToList();
         }
 
@@ -53,7 +53,7 @@ namespace AnotherRound
         /// </summary>
         /// <param name="proj">Проверяемая пуля</param>
         /// <returns></returns>
-        private bool IsCollisionWithObstacle(Projectail proj, List<Obstacle> Obstacles)
+        private bool IsCollisionWithObstacle(Projectail proj, IEnumerable<Obstacle> Obstacles)
         {
             foreach (var obstacle in Obstacles)
                 if (Physics.CollisionTwoAbstract(proj, obstacle))
@@ -65,13 +65,11 @@ namespace AnotherRound
             return false;
         }
 
-        private void DoDamageIfCanBeDamaged(Obstacle obstacle, List<Obstacle> Obstacles)
+        private void DoDamageIfCanBeDamaged(Obstacle obstacle, IEnumerable<Obstacle> Obstacles)
         {
             if (obstacle is ICanBeDamaged removable)
             {
                 removable.GetHit();
-                if (removable.IsDead)
-                    Obstacles.Remove(obstacle);
             }
         }
 

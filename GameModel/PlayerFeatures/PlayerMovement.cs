@@ -15,23 +15,23 @@ namespace AnotherRound
         /// <param name="obstacleVault">Список препятствий</param>
         /// <param name="player">Объект игрока</param>
         /// <param name="fieldSize">Размер поля</param>
-        public static Vector MovePlayer(
+        public static Vector CalculateMoveVector(
             Direction controlX, 
             Direction controlY, 
-            ObstacleVault obstacleVault, 
+            MapObjectsVault obstacleVault, 
             Player player, 
             Size fieldSize)
         {
             var move = MoveInDirectionUsingVector(controlX, controlY, player.Speed);
             var newPlayer = new CircleObstacle(player.Location.Copy() + move, player.Size);
 
-            foreach (var obstacle in obstacleVault.Obstacles)
+            foreach (var obstacle in obstacleVault.GetAllObstacles())
             {
                 if (Physics.CollisionTwoAbstract(newPlayer, obstacle))
                     move = player.ReactOnCollishion(obstacle, move);
             }
 
-            return ApplyMoveWithCheckFieldSize(move, fieldSize, player);
+            return CheckMoveWithFieldBounds(move, fieldSize, player);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace AnotherRound
         /// Проверяет, находится ли объект игрока за полем, после чего применяет движение, если возможно.
         /// </summary>
         /// <param name="move">Вектор движения объекта игрока.</param>
-        public static Vector ApplyMoveWithCheckFieldSize(Vector move, Size fieldSize, Player player)
+        public static Vector CheckMoveWithFieldBounds(Vector move, Size fieldSize, Player player)
         {
             var newX = player.Location.X + move.X;
             var newY = player.Location.Y + move.Y;

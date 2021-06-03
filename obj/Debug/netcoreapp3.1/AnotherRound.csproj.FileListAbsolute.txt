@@ -1,4 +1,3 @@
-C:\projects-c#\AnotherRound\obj\Debug\netcoreapp3.1\AnotherRound.csprojAssemblyReference.cache
 C:\projects-c#\AnotherRound\obj\Debug\netcoreapp3.1\AnotherRound.MainForm.resources
 C:\projects-c#\AnotherRound\obj\Debug\netcoreapp3.1\AnotherRound.csproj.GenerateResource.cache
 C:\projects-c#\AnotherRound\obj\Debug\netcoreapp3.1\AnotherRound.AssemblyInfoInputs.cache
@@ -100,3 +99,4 @@ C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.TestPlatfo
 C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
 C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
 C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\FluentAssertions.dll
+C:\projects-c#\AnotherRound\obj\Debug\netcoreapp3.1\AnotherRound.csproj.AssemblyReference.cache

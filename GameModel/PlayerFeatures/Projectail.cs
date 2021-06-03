@@ -11,8 +11,8 @@ namespace AnotherRound
         public Size Size { get; set; }
         public double DirectionAngle { get; set; }
         public Vector Location { get; set; }
-
         public double Radius => Size.Width / 2;
+        public bool IsCanCollision { get; set; } = true;
 
         public Projectail(int speed, Size size)
         {

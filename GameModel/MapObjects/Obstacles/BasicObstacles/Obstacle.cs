@@ -9,6 +9,7 @@ namespace AnotherRound
     {
         public Vector Location { get; set; }
         public Size Size { get; set; }
+        public bool IsCanCollision { get; set; } = true;
 
         public Obstacle(Vector location, Size size)
         {

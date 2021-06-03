@@ -7,8 +7,6 @@ namespace AnotherRound
 {
     public class SquareObstacle : Obstacle, ISquare
     {
-        public new Vector Location { get; set; }
-        public new Size Size { get; set; }
         public Vector MinPoints => new Vector(Location.X - (Size.Width / 2), Location.Y - (Size.Height / 2));
         public Vector MaxPoints => new Vector(Location.X + (Size.Width / 2), Location.Y + (Size.Height / 2));
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 namespace AnotherRound
 {
-    public interface IForm
+    public interface IForm : IMapObject
     {
-        Vector Location { get; set; }
         Size Size { get; set; }
+        public bool IsCanCollision { get; set; }
     }
 }
