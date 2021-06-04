@@ -17,7 +17,7 @@ namespace AnotherRound
         public Size FieldSize { get; private set; } = new Size(1200, 700);
         public Player Player { get => MapObjectsVault.Player; } 
         public ProjectileList Projectails { get; private set; } = new ProjectileList();
-        public MapObjectsVault MapObjectsVault { get; private set; } = MapObjectsVault.GenerateTestLevel();
+        public MapObjectsVault MapObjectsVault { get; private set; } = MapObjectsVault.GenerateProrotypeLevel();
 
         public void GameTick(ControlCommand moveCommand, ControlCommand shootCommand)
         {

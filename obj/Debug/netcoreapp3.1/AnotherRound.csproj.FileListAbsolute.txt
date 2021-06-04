@@ -100,3 +100,4 @@ C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.TestPlatfo
 C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
 C:\projects-c#\AnotherRound\bin\Debug\netcoreapp3.1\FluentAssertions.dll
 C:\projects-c#\AnotherRound\obj\Debug\netcoreapp3.1\AnotherRound.csproj.AssemblyReference.cache
+C:\projects-c#\AnotherRound\obj\Debug\netcoreapp3.1\AnotherRound.MenuForm.resources

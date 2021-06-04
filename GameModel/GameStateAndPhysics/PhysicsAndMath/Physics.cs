@@ -64,7 +64,8 @@ namespace AnotherRound
             if (IsLocationBetweenBounds(circle.Location, square.MinPoints, square.MaxPoints))
                 return CollisionTwoForms(new SquareObstacle(circle.Location, circle.Size), square);
             else
-                return CollisionTwoForms(circle, GenerateCircleFromSquare(square));
+                //return CollisionTwoForms(circle, GenerateCircleFromSquare(square));
+                return CircleRectanble(square, circle);
         }
 
         /// <summary>
@@ -91,6 +92,19 @@ namespace AnotherRound
             var size = new Size((int)Math.Ceiling(radious), (int)Math.Ceiling(radious));
 
             return new CircleObstacle(square.Location, size);
+        }
+
+        private static bool CircleRectanble(ISquare rectangle, ICircle circle)
+        {
+            var centresDistance = new Vector(Math.Abs(circle.Location.X - rectangle.Location.X),
+                Math.Abs(circle.Location.Y - rectangle.Location.Y));
+
+            var cornerDistance = (centresDistance.X - rectangle.Size.Width / 2) *
+                (centresDistance.X - rectangle.Size.Width / 2) +
+                (centresDistance.Y - rectangle.Size.Height / 2) * 
+                (centresDistance.Y - rectangle.Size.Height / 2);
+
+            return (cornerDistance <= circle.Radius * circle.Radius);
         }
     }
 

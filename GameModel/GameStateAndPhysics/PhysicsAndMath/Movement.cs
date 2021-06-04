@@ -35,13 +35,13 @@ namespace AnotherRound
                 moveX = (fieldSize.Width - movable.Size.Width / 2) - movable.Location.X;
 
             if (newX < movable.Size.Width / 2)
-                moveX = movable.Location.X - movable.Size.Width / 2;
+                moveX = movable.Size.Width / 2 - movable.Location.X;
 
             if (newY > fieldSize.Height - movable.Size.Height / 2)
                 moveY = (fieldSize.Height - movable.Size.Height / 2) - movable.Location.Y;
 
             if (newY < movable.Size.Height / 2)
-                moveY = movable.Location.Y - movable.Size.Height / 2;
+                moveY = movable.Size.Height / 2 - movable.Location.Y;
 
             return new Vector(moveX, moveY);
         }

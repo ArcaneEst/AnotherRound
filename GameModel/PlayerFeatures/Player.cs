@@ -110,8 +110,8 @@ namespace AnotherRound
             var maxY = obstacle.MaxPoints.Y - Location.Y + Size.Height / 2;
             var deltaY =Math.Abs(minY) < Math.Abs(maxY) ? minY : maxY;
 
-            if (Math.Abs(deltaX) > 5) deltaX = move.X;
-            if (Math.Abs(deltaY) > 5) deltaY = move.Y;
+            if (Math.Abs(deltaX) > Speed) deltaX = move.X;
+            if (Math.Abs(deltaY) > Speed) deltaY = move.Y;
             return new Vector(deltaX, deltaY);
         }
 
