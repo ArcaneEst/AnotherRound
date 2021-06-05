@@ -18,7 +18,7 @@ namespace AnotherRound
         /// <summary>
         /// Выполняет действие всех объектов-пуль на поле.
         /// </summary>
-        public void ExecuteAllProjectiles(Size FieldSize, MapObjectsVault obstacleVault)
+        public void ExecuteAllProjectiles(Size FieldSize, ObstaclesVault obstacleVault)
         {
             foreach (var proj in Projectails)
                 ExecuteProjectile(proj);
@@ -40,7 +40,7 @@ namespace AnotherRound
         /// <summary>
         /// Убирает из списка пуль все те, что находятся за полем или куда-то попали.
         /// </summary>
-        private void RemoveHitedProjectiles(Size FieldSize, MapObjectsVault obstacleVault)
+        private void RemoveHitedProjectiles(Size FieldSize, ObstaclesVault obstacleVault)
         {
             Projectails = Projectails
                 .Where(proj => !IsOutOfField(proj.Location, proj.Size, FieldSize))

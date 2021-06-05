@@ -9,7 +9,6 @@ namespace AnotherRound
     {
         public int Speed { get; set; } = 3;
         public int HealthPoints { get; set; } = 3;
-
         public bool IsDead => HealthPoints <= 0;
 
         public Enemy(Vector location, Size size) : base(location, size)
@@ -18,7 +17,7 @@ namespace AnotherRound
             Size = size;
         }
 
-        public Vector GetMoveVector(MapObjectsVault mapObjects)
+        public Vector GetMoveVector(ObstaclesVault mapObjects)
         {
             var angleToPlayer = Location.AngleTo(mapObjects.Player.Location);
 
@@ -63,8 +62,12 @@ namespace AnotherRound
             var newXMod = (int)Math.Sqrt(spaceBetweenCentres * spaceBetweenCentres - newDeltaY * newDeltaY) + 1;
             var deltaXForMin = obstacle.Location.X - newXMod - Location.X + move.X;
             var deltaXForMax = obstacle.Location.X + newXMod - Location.X + move.X;
+            var toGo = 0;
 
-            var toGo = Math.Abs(deltaXForMin) < Math.Abs(deltaXForMax) ? deltaXForMin : deltaXForMax;
+            try
+            {
+                toGo = Math.Abs(deltaXForMin) < Math.Abs(deltaXForMax) ? deltaXForMin : deltaXForMax;
+            } catch (OverflowException) { }
 
             return new Vector(toGo, move.Y);
         }
@@ -80,7 +83,11 @@ namespace AnotherRound
             var deltaYForMin = obstacle.Location.Y - newXMod - Location.Y + move.Y;
             var deltaYForMax = obstacle.Location.Y + newXMod - Location.Y + move.Y;
 
-            var toGo = Math.Abs(deltaYForMin) < Math.Abs(deltaYForMax) ? deltaYForMin : deltaYForMax;
+            var toGo = 0;
+
+            try { 
+                toGo = Math.Abs(deltaYForMin) < Math.Abs(deltaYForMax) ? deltaYForMin : deltaYForMax;
+            } catch (OverflowException) { }
 
             return new Vector(move.X, toGo);
         }

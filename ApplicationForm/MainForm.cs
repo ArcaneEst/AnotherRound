@@ -11,9 +11,10 @@ namespace AnotherRound
     class MainForm : Form
     {
         Timer timer = new Timer();
-        public Field Field { get; set; } = new Field(new Vector(50, 50));
+        public Field Field { get; set; }
         public Controller Controller = new Controller();
         public Image Image;
+        public int CurrentLevel;
 
         public void TryRestartGame()
         {
@@ -29,7 +30,7 @@ namespace AnotherRound
         public void RestartGame()
         {
             timer = new Timer();
-            Field = new Field(new Vector(50, 50));
+            Field = new Field(CurrentLevel);
             Controller = new Controller();
             StartGame();
         }
@@ -58,8 +59,11 @@ namespace AnotherRound
         /// <summary>
         /// Основной метод формы. Работает, пока работает форма.
         /// </summary>
-        public MainForm()
+        public MainForm(int level)
         {
+            Field = new Field(level);
+            CurrentLevel = level;
+
             Image = new Bitmap(Field.FieldSize.Width, Field.FieldSize.Height, PixelFormat.Format32bppArgb);
 
             timer.Interval = 10;
@@ -134,7 +138,7 @@ namespace AnotherRound
         /// <param name="g">Заполняемый объект графики.</param>
         private void DrawObstacles(Graphics g)
         {
-            foreach (var obstacle in Field.MapObjectsVault.GetAllObstacles())
+            foreach (var obstacle in Field.ObjectsVault.GetAllObstacles())
             {
                 var obstacleBrush = Brushes.Brown;
                 var removableBrush = Brushes.Red;

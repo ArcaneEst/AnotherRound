@@ -8,7 +8,7 @@ namespace AnotherRound
     public class Movement
     {
         public static Vector CalculateMoveWithCollision(
-            ICanMove movable, MapObjectsVault vault, Size fieldSize, Vector moveVector)
+            ICanMove movable, ObstaclesVault vault, Size fieldSize, Vector moveVector)
         {
             var withNewLocation = movable.GetCopyWithNewLocation(movable.Location + moveVector);
 

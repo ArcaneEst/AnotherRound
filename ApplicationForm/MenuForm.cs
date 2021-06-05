@@ -47,7 +47,7 @@ namespace AnotherRound
 
         private static List<Button> GenerateAllButtons(Form form)
         {
-            return new List<Button>() {  NewGameButton(form), ExitButton() };
+            return new List<Button>() {  NewGameButton(form), SurvivalModeButton(form), ExitButton() };
         }
 
         private static Button NewGameButton(Form form)
@@ -59,7 +59,25 @@ namespace AnotherRound
             button.BackColor = Color.White;
             button.Click += (e, args) => 
             {
-                var game = new MainForm();
+                var game = new MainForm(0);
+                game.FormClosed += (e, args) => form.Show();
+                form.Hide();
+                game.Show();
+            };
+
+            return button;
+        }
+
+        private static Button SurvivalModeButton(Form form)
+        {
+            var button = new Button();
+            button.Text = "Survival mode";
+            button.Font = new Font("Arial", 24, FontStyle.Bold);
+            button.ForeColor = Color.Coral;
+            button.BackColor = Color.White;
+            button.Click += (e, args) =>
+            {
+                var game = new MainForm(1);
                 game.FormClosed += (e, args) => form.Show();
                 form.Hide();
                 game.Show();

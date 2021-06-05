@@ -33,7 +33,7 @@ namespace AnotherRound
         }
 
         public void DoPlayerMove(
-            Direction controlX, Direction controlY, MapObjectsVault obstacles, Size fieldSize)
+            Direction controlX, Direction controlY, ObstaclesVault obstacles, Size fieldSize)
         {
             var toMove = CalcMoveVectorByDirections(controlX, controlY, Speed);
             toMove = Movement.CalculateMoveWithCollision(this, obstacles, fieldSize, toMove);
@@ -79,7 +79,13 @@ namespace AnotherRound
             var deltaXForMin = obstacle.Location.X - newXMod - Location.X + move.X;
             var deltaXForMax = obstacle.Location.X + newXMod - Location.X + move.X;
 
-            var toGo = Math.Abs(deltaXForMin) < Math.Abs(deltaXForMax) ? deltaXForMin : deltaXForMax;
+            var toGo = 0;
+
+            try
+            {
+                toGo = Math.Abs(deltaXForMin) < Math.Abs(deltaXForMax) ? deltaXForMin : deltaXForMax;
+            } catch (OverflowException) { }
+
 
             return new Vector(toGo, move.Y);
         }
@@ -95,7 +101,12 @@ namespace AnotherRound
             var deltaYForMin = obstacle.Location.Y - newXMod - Location.Y + move.Y;
             var deltaYForMax = obstacle.Location.Y + newXMod - Location.Y + move.Y;
 
-            var toGo = Math.Abs(deltaYForMin) < Math.Abs(deltaYForMax) ? deltaYForMin : deltaYForMax;
+            var toGo = 0;
+
+            try
+            {
+                toGo = Math.Abs(deltaYForMin) < Math.Abs(deltaYForMax) ? deltaYForMin : deltaYForMax;
+            } catch (OverflowException) { }
 
             return new Vector(move.X, toGo);
         }
@@ -154,7 +165,7 @@ namespace AnotherRound
             return new Vector(speed * xMove, speed * yMove);
         }
 
-        public Vector GetMoveVector(MapObjectsVault MapObjects)
+        public Vector GetMoveVector(ObstaclesVault MapObjects)
         {
             throw new NotImplementedException();
         }

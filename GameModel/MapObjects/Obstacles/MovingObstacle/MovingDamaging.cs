@@ -19,7 +19,7 @@ namespace AnotherRound
 
         public int Speed { get; set; } = 10;
 
-        public Vector GetMoveVector(MapObjectsVault Obstacles)
+        public Vector GetMoveVector(ObstaclesVault Obstacles)
         {
             if (Location.Y - UpBound.Y < 0)
                 MoveUp = false;

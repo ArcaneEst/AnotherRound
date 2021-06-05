@@ -7,41 +7,36 @@ namespace AnotherRound
 {
     public class Field
     {
+        private Dictionary<int, Func<ObstaclesVault>> LevelGenerator = 
+            new Dictionary<int, Func<ObstaclesVault>>() 
+            {
+                {0, PrototypeLevel.GenerateProrotypeLevel },
+                {1, SurvivalLevel.GenerateSurvival },
+                {2, TestLevel.GenerateTestLevel }
+            };
+
         public delegate void GameEnded();
         public event GameEnded EndGameEvent;
-        public Field(Vector playerStartPosition)
+        public Field(int level)
         {
-            MapObjectsVault.Player = new Player(playerStartPosition, new Size(50, 50));
+            ObjectsVault.Player = new Player(new Vector(50, 50), new Size(50, 50));
+            ObjectsVault = LevelGenerator[level]();
         }
 
         public Size FieldSize { get; private set; } = new Size(1200, 700);
-        public Player Player { get => MapObjectsVault.Player; } 
+        public Player Player { get => ObjectsVault.Player; } 
         public ProjectileList Projectails { get; private set; } = new ProjectileList();
-        public MapObjectsVault MapObjectsVault { get; private set; } = MapObjectsVault.GenerateProrotypeLevel();
+        public ObstaclesVault ObjectsVault { get; private set; } = SurvivalLevel.GenerateSurvival();
 
         public void GameTick(ControlCommand moveCommand, ControlCommand shootCommand)
         {
             ExecuteAllProjectiles();
-            MapObjectsVault.ExecuteMoving(FieldSize);
+            ObjectsVault.ExecuteVault(FieldSize);
             TryShoot(shootCommand);
             MovePlayer(moveCommand);
 
             if (Player.IsDead)
                 EndGameEvent.Invoke();
-        }
-
-        /// <summary>
-        /// Проверка - находится ли объект за полем хотя бы частично.
-        /// </summary>
-        /// <param name="newLocation"></param>
-        /// <param name="objectSize"></param>
-        /// <returns></returns>
-        private bool IsOutOfField(Vector newLocation, Size objectSize)
-        {
-            return newLocation.X > FieldSize.Width - objectSize.Width / 2 ||
-                newLocation.X < objectSize.Width / 2 ||
-                newLocation.Y > FieldSize.Height - objectSize.Height / 2 ||
-                newLocation.Y < objectSize.Height / 2;
         }
 
         //Методы вызова компонентов игры.
@@ -53,7 +48,7 @@ namespace AnotherRound
         /// </summary>
         private void ExecuteAllProjectiles()
         {
-            Projectails.ExecuteAllProjectiles(FieldSize, MapObjectsVault);
+            Projectails.ExecuteAllProjectiles(FieldSize, ObjectsVault);
         }
 
         private void TryShoot(ControlCommand shootCommand)
@@ -71,7 +66,7 @@ namespace AnotherRound
         /// <param name="controlY">Обработанный ввод по оси y</param>
         private void MovePlayer(ControlCommand moveCommand)
         {
-            Player.DoPlayerMove(moveCommand.X, moveCommand.Y, MapObjectsVault, FieldSize);
+            Player.DoPlayerMove(moveCommand.X, moveCommand.Y, ObjectsVault, FieldSize);
         }
         #endregion
         #endregion
