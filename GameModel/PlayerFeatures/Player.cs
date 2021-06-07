@@ -12,8 +12,10 @@ namespace AnotherRound
         public Weapon weapon = new Weapon(10, new Size(15, 15));
         public int HealthPoints { get; set; } = 3;
         public bool IsDead => HealthPoints <= 0;
+        public bool IsWinGame;
         public bool IsCanBeHited { get; set; } = true;
         public int Speed { get; set; } = 5;
+
 
         public Player(Vector spawnPoint, Size size) : base(spawnPoint, size)
         {
@@ -85,7 +87,6 @@ namespace AnotherRound
             {
                 toGo = Math.Abs(deltaXForMin) < Math.Abs(deltaXForMax) ? deltaXForMin : deltaXForMax;
             } catch (OverflowException) { }
-
 
             return new Vector(toGo, move.Y);
         }

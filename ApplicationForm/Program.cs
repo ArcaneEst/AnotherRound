@@ -15,7 +15,7 @@ namespace AnotherRound
         static void Main()
         {
             Application.Run(new MenuForm());
-            //Application.Run(new MainForm());
+            //Application.Run(new MainForm(0));
         }
     }
 }

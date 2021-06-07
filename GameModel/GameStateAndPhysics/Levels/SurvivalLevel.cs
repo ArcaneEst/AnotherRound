@@ -18,9 +18,33 @@ namespace AnotherRound
         public bool ToSpawn { get; set; } = true;
         private Random rnd { get; set; }
         private System.Timers.Timer SpawnTimer = new System.Timers.Timer();
+        private int Points = 0;
         public SurvivalLevel()
         {
             rnd = new Random();
+        }
+
+        public override void ClearFromDead()
+        {
+            var list = new List<Obstacle>();
+            foreach (var obstacle in Obstacles)
+            {
+                if (obstacle is ICanBeDamaged damaged && damaged.IsDead)
+                    list.Add(obstacle);
+            }
+
+            foreach (var toDelete in list)
+            {
+                Obstacles.Remove(toDelete);
+                Points += 10;
+            }
+        }
+
+        public override string[] GenerateInfoTable()
+        {
+            return new string[] { 
+                $"Health: {Player.HealthPoints}", 
+                $"Score: {Points}"};
         }
 
         public override void ExecuteVault(Size fieldSize)

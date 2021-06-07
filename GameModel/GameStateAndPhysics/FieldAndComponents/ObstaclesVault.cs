@@ -17,7 +17,10 @@ namespace AnotherRound
             ExecuteMoving(fieldSize);
         }
 
-
+        public virtual string[] GenerateInfoTable()
+        {
+            return new string[0];
+        }
 
         public IEnumerable<Obstacle> GetAllObstacles()
         {
@@ -30,7 +33,7 @@ namespace AnotherRound
             }
         }
 
-        public void ClearFromDead()
+        public virtual void ClearFromDead()
         {
             var list = new List<Obstacle>();
             foreach (var obstacle in Obstacles)

@@ -12,7 +12,7 @@ namespace AnotherRound
 
         public void ExecuteContrloller(Field field)
         {
-            if (field.Player.IsDead)
+            if (field.Player.IsDead || field.Player.IsWinGame)
                 return;
 
             var moveCommand = CalculateCommand(MoveFlags);

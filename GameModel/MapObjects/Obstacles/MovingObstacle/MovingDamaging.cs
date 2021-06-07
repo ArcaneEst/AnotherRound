@@ -7,27 +7,51 @@ namespace AnotherRound
 {
     public class MovingDamaging : CircleObstacle, ICanMove, ICanDamage
     {
-        private Vector UpBound = new Vector(600, 200);
-        private Vector DownBound = new Vector(600, 400);
-        private bool MoveUp = true;
+        private readonly Vector firstPoint;
+        private readonly Vector secondPoint;
+        private bool moveToSecond = true;
+        private readonly double angleFirstToSecond;
+        public int Speed { get; set; } = 10;
         public new Size Size { get; set; }
-        public MovingDamaging(Vector location, Size size) : base(location, size)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="location">Спавн</param>
+        /// <param name="first">Первая точка-граница</param>
+        /// <param name="second">Вторая точка-граница</param>
+        /// <param name="size">Размер объекта</param>
+        public MovingDamaging(Vector location, Vector first, Vector second,Size size) : base(location, size)
         {
             Location = location;
             Size = size;
+            firstPoint = first;
+            secondPoint = second;
+            angleFirstToSecond = firstPoint.AngleTo(secondPoint);
         }
 
-        public int Speed { get; set; } = 10;
+        public MovingDamaging(Vector first, Vector second, Size size, int speed = 10) 
+             : base(new Vector((first.X + second.X) / 2, (first.Y + second.Y) / 2), size)
+        {
+            Location = new Vector((first.X + second.X) / 2, (first.Y + second.Y) / 2);
+            firstPoint = first;
+            secondPoint = second;
+            Size = size;
+            angleFirstToSecond = firstPoint.AngleTo(secondPoint);
+            Speed = speed;
+        }
 
         public Vector GetMoveVector(ObstaclesVault Obstacles)
         {
-            if (Location.Y - UpBound.Y < 0)
-                MoveUp = false;
 
-            if (Location.Y - DownBound.Y > 0)
-                MoveUp = true;
+            var pointToMove = moveToSecond ?  firstPoint : secondPoint;
 
-            var moveVector = new Vector(0, Speed * (MoveUp ? -1 : 1));
+            if (Location.ModOfDistanceTo(pointToMove) > firstPoint.ModOfDistanceTo(secondPoint))
+                moveToSecond = !moveToSecond;
+
+            var yMove = (int)Math.Round(Speed * Math.Sin(angleFirstToSecond) * (moveToSecond ? 1 : -1));
+            var xMove = (int)Math.Round(Speed * Math.Cos(angleFirstToSecond) * (moveToSecond ? 1 : -1));
+
+            var moveVector = new Vector(xMove, yMove);
 
             return moveVector;
         }
@@ -39,7 +63,7 @@ namespace AnotherRound
 
         public ICanMove GetCopyWithNewLocation(Vector location)
         {
-            return new MovingDamaging(location, Size);
+            return new MovingDamaging(location, firstPoint, secondPoint, Size);
         }
 
         public Vector ReactOnCollision(Obstacle obstacle, Vector move)

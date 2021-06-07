@@ -15,7 +15,7 @@ namespace AnotherRound
                 {2, TestLevel.GenerateTestLevel }
             };
 
-        public delegate void GameEnded();
+        public delegate void GameEnded(string reason);
         public event GameEnded EndGameEvent;
         public Field(int level)
         {
@@ -36,7 +36,10 @@ namespace AnotherRound
             MovePlayer(moveCommand);
 
             if (Player.IsDead)
-                EndGameEvent.Invoke();
+                EndGameEvent.Invoke("Dead");
+
+            if (Player.IsWinGame)
+                EndGameEvent.Invoke("Win");
         }
 
         //Методы вызова компонентов игры.

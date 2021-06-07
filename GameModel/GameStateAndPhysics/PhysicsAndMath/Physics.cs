@@ -65,7 +65,7 @@ namespace AnotherRound
                 return CollisionTwoForms(new SquareObstacle(circle.Location, circle.Size), square);
             else
                 //return CollisionTwoForms(circle, GenerateCircleFromSquare(square));
-                return CircleRectanble(square, circle);
+                return CircleRectangle(square, circle);
         }
 
         /// <summary>
@@ -81,21 +81,10 @@ namespace AnotherRound
                 (location.Y >= minBounds.Y && location.Y <= maxBounds.Y);
         }
 
-        /// <summary>
-        /// Генерирует круг из квадрата, с радиусом, равным половине диагонали.
-        /// </summary>
-        /// <param name="square"></param>
-        /// <returns></returns>
-        private static ICircle GenerateCircleFromSquare(ISquare square)
+        private static bool CircleRectangle(ISquare rectangle, ICircle circle)
         {
-            var radious = (square.MaxPoints - square.Location).Length * 2;
-            var size = new Size((int)Math.Ceiling(radious), (int)Math.Ceiling(radious));
 
-            return new CircleObstacle(square.Location, size);
-        }
 
-        private static bool CircleRectanble(ISquare rectangle, ICircle circle)
-        {
             var centresDistance = new Vector(Math.Abs(circle.Location.X - rectangle.Location.X),
                 Math.Abs(circle.Location.Y - rectangle.Location.Y));
 

@@ -40,6 +40,11 @@ namespace AnotherRound
             return new Vector(a.X / d, a.Y / d);
         }
 
+        /// <summary>
+        /// Вычисляет дистанцию до другой точки по теореме Пифагора.
+        /// </summary>
+        /// <param name="anotherVector">Вторая точка.</param>
+        /// <returns></returns>
         public double ModOfDistanceTo(Vector anotherVector)
         {
             return Math.Sqrt(

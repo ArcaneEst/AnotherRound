@@ -16,9 +16,23 @@ namespace AnotherRound
         public Image Image;
         public int CurrentLevel;
 
-        public void TryRestartGame()
+        public void EndGame(string reason)
         {
-            var dialogResult = MessageBox.Show("Restart game?", "Conformation", MessageBoxButtons.OKCancel);
+            if (reason == "Dead")
+            {
+                TryRestart("Player is dead. Another round?");
+            }
+            else if (reason == "Win")
+            {
+                TryRestart("You win! Another round?");
+            }
+            else throw new ArgumentException();
+        }
+
+        private void TryRestart(string message)
+        {
+            var dialogResult = MessageBox.Show(message,
+                    "Conformation", MessageBoxButtons.OKCancel);
             if (dialogResult == DialogResult.OK)
             {
                 RestartGame();
@@ -37,7 +51,7 @@ namespace AnotherRound
 
         public void StartGame()
         {
-            Field.EndGameEvent += TryRestartGame;
+            Field.EndGameEvent += EndGame;
         }
 
 
@@ -92,12 +106,38 @@ namespace AnotherRound
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
             e.Graphics.FillRectangle(Brushes.SandyBrown, ClientRectangle);
 
+            var tableImage = new Bitmap(300, 300, PixelFormat.Format32bppArgb);
+            var table = Graphics.FromImage(tableImage);
+            GenerateInfoTable(table);
+            e.Graphics.DrawImage(tableImage, 20, 50);
+
             var g = Graphics.FromImage(Image);
             DrawField(g);
 
             e.Graphics.DrawImage(Image, 
-                (ClientRectangle.Width - Image.Width) / 2, 
+                ((ClientRectangle.Width - Image.Width) - 50), 
                 (ClientRectangle.Height - Image.Height) / 2);
+        }
+
+        private void GenerateInfoTable(Graphics g)
+        {
+            var text = Field.ObjectsVault.GenerateInfoTable();
+            g.FillRectangle(Brushes.White, 20, 50, 220, 60 + 30 * text.Length);
+            DrawArcs(g, text.Length);
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                g.DrawString(text[i], new Font("Arial", 20), Brushes.Black, 50, 80 + 30 * i);
+            }
+        }
+
+        private void DrawArcs(Graphics g, int textCount)
+        {
+            g.DrawArc(new Pen(Color.SandyBrown, 8), 15, 45, 40, 40, 180, 90);
+            g.DrawArc(new Pen(Color.SandyBrown, 8), 205, 45, 40, 40, 270, 90);
+
+            g.DrawArc(new Pen(Color.SandyBrown, 8), 15, 75 + 30 * textCount, 40, 40, 180, -90);
+            g.DrawArc(new Pen(Color.SandyBrown, 8), 205, 75 + 30 * textCount, 40, 40, 90, -90);
         }
 
         /// <summary>
@@ -121,6 +161,7 @@ namespace AnotherRound
             foreach (var proj in Field.Projectails.Projectails)
                 g.FillCentredEllipse(Brushes.Green, proj.Location, proj.Size);
         }
+
         /// <summary>
         /// Рисует игрока.
         /// </summary>
@@ -142,7 +183,14 @@ namespace AnotherRound
             {
                 var obstacleBrush = Brushes.Brown;
                 var removableBrush = Brushes.Red;
-                if (obstacle is CircleRemovable)
+                var enemyBrush = Brushes.Black;
+                var objectiveBrush = Brushes.YellowGreen;
+
+                if (obstacle is Enemy)
+                    g.FillCentredEllipse(enemyBrush, obstacle.Location, obstacle.Size);
+                else if (obstacle is Objective)
+                    g.FillCenterRectangle(objectiveBrush, obstacle.Location, obstacle.Size);
+                else if (obstacle is CircleRemovable)
                     g.FillCentredEllipse(removableBrush, obstacle.Location, obstacle.Size);
                 else if (obstacle is SquareRemovable)
                     g.FillCenterRectangle(removableBrush, obstacle.Location, obstacle.Size);
